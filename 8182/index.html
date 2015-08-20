@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="html/text, charset=utf-8"/>
+<title>九宫格小游戏</title>
+<style>
+*{ margin:0; padding:0; list-style-type:none;}
+body { background:url(bg.gif) repeat-x;}
+.main { position:relative;}
+#base,.main { width:302px; height:302px; margin:100px auto 0;}
+#base li { height:100px; width:100px; color:transparent; float:left;}
+.x { background:url(x.png) no-repeat left top;}
+.o { background:url(o.png) no-repeat left top;}
+</style>
+
+</head>
+
+<body>
+	<h1 style="text-align:center; padding-top:50px">九宫格小游戏</h1>
+    <div class="main">
+    	<ul id="base">
+        	<li style="border-right:1px solid #855b27; border-bottom:1px solid #855b27">0</li>
+            <li style="border-right:1px solid #855b27; border-bottom:1px solid #855b27">1</li>
+            <li style="border-bottom:1px solid #855b27">2</li>
+            <li style="border-right:1px solid #855b27; border-bottom:1px solid #855b27">3</li>
+            <li style="border-right:1px solid #855b27; border-bottom:1px solid #855b27">4</li>
+            <li style="border-bottom:1px solid #855b27">5</li>
+            <li style="border-right:1px solid #855b27;">6</li>
+
+            <li style="border-right:1px solid #855b27;">7</li>
+            <li>8</li>
+        </ul>
+        <div id="lock"></div>
+    </div>
+    <a href="#" onclick="again()"; style="display:block; padding:5px; font-weight:bold; color:white; text-align:center; line-height:150%; background:green; margin:40px auto; width:150px;">再来一次</a>
+    
+<script>
+/*
+九宫格小游戏
+1.8中结果
+2.有结果的时候，至少有五颗子；
+3.将甲乙两方各自的棋子index分别存在两个数组
+4.把结果存有一个数组，然后跟棋子数组比较，只要对上一个结果，便赢
+*/
+	var classSelect = 0;
+	var lis = document.getElementsByTagName('li');
+	var lock = document.getElementById('lock');
+	var win = [[0,1,2],[2,3,4],[6,7,8],[2,5,8],[1,4,7],[0,3,6],[0,4,8],[2,4,6]];
+	//甲方下过的格子的index
+	var x = [];
+	//乙方下过的格子的index
+	var o = [];
+	var winnum = 0;
+	
+		for( var i = 0; i<lis.length; i++){
+			lis[i].onclick = function() {
+				
+				if(this.className == ''){
+					++classSelect;
+					if(classSelect%2 == 0) {
+						this.className = 'x';
+						x.push(this.innerHTML);
+					}else if(classSelect%2 == 1){
+						this.className = 'o';
+						o.push(this.innerHTML);
+					}
+				}else{
+					alert("此处已有子，请落别处");
+				}
+				
+			    if(classSelect > 4) {
+					for( var h = 0; h<win.length; h++) {
+						var num = 0;
+						for( var j = 0; j<win[h].length; j++) {
+							for( var k = 0; k<o.length; k++) {
+								if(win[h][j] == o[k]) {
+									num++
+								}
+							}
+						}
+						if(num == 3) {
+							alert("o赢了！");
+							winnum = 1;
+							
+							lock.style.display = "block";
+						}
+					}
+					
+					for( var h = 0; h<win.length; h++) {
+						var num = 0;
+						for( var j = 0; j<win[h].length; j++) {
+							for( var k = 0; k<x.length; k++) {
+								if(win[h][j] == x[k]) {
+									num++
+								}
+							}
+						}
+						if(num == 3) {
+							alert("x赢了！");
+							winnum = 1;
+							
+							lock.style.display = "block";
+						}
+					}
+				}
+				
+				if(classSelect == 9 && winnum !=1) {
+					alert('平局！');
+				}
+			}
+		
+	
+		
+		//重来
+		function again() {
+			for(var i = 0; i<lis.length; i++) {
+				lis[i].className = '';
+				x = [];
+				o = [];
+				lock.style.display = "none";
+				classSelect = 0;
+				winnum = 0;
+			}
+		}
+	}
+	
+</script>    
+</body>
+</html>
+
+
+
